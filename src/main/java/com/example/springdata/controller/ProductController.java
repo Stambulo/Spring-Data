@@ -1,34 +1,32 @@
 package com.example.springdata.controller;
 
-import com.example.springdata.model.Product;
-import com.example.springdata.repository.ProductRepository;
+import com.example.springdata.dto.ProductDto;
+import com.example.springdata.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @GetMapping
-    public String findAll(Model model){
-        model.addAttribute("product", productRepository.findAll());
-        return "product";
-    }
-
-    @GetMapping("/{id}")
-    public String deleteById(@PathVariable Integer id){
-        productRepository.deleteById(id);
-        return "redirect:/product";
+    public List<ProductDto> findAll(){
+        return productService.findAll();
     }
 
     @PostMapping
-    public String create(@ModelAttribute("product")Product product){
-        productRepository.save(product);
-        return "redirect:/product";
+    public void save(@RequestBody ProductDto productDto){
+        productService.save(productDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBy(@PathVariable Integer id){
+        productService.deleteById(id);
     }
 }
